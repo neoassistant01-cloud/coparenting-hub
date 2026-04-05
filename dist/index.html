@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-Parenting Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2D5A5A;
+      --primary-light: #3a7373;
+      --secondary: #F7F3E8;
+      --accent: #E8A87C;
+      --success: #7FB069;
+      --warning: #D4A574;
+      --danger: #C97C7C;
+      --text-primary: #2C3E3E;
+      --text-secondary: #6B7C7C;
+      --bg: #FDFBF7;
+      --card-bg: #FFFFFF;
+      --border: #E5DFD3;
+      --shadow: 0 2px 8px rgba(45, 90, 90, 0.08);
+      --shadow-hover: 0 4px 16px rgba(45, 90, 90, 0.14);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 18px; }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Header */
+    .header {
+      padding: 24px 0 16px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 26px;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--card-bg);
+      padding: 6px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab {
+      flex: 1;
+      min-width: 80px;
+      padding: 10px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 200ms ease-out;
+      white-space: nowrap;
+    }
+    .tab:hover { background: var(--secondary); color: var(--text-primary); }
+    .tab.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Panels */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 200ms ease-out;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #d4956b; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #b56a6a; }
+    .btn-sm { padding: 6px 12px; font-size: 13px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Forms */
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: border-color 200ms;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 62, 62, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+    .modal h2 { margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    /* Calendar */
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .calendar-nav h2 { font-size: 20px; }
+    .cal-nav-btn {
+      width: 36px; height: 36px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      cursor: pointer;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 200ms;
+    }
+    .cal-nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-dow {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 200ms ease-out;
+      position: relative;
+      min-height: 44px;
+    }
+    .cal-day:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .cal-day.other-month { color: var(--text-secondary); opacity: 0.5; }
+    .cal-day.today { border-color: var(--primary); font-weight: 700; }
+    .cal-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .cal-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .cal-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .cal-dot.p1 { background: var(--primary); }
+    .cal-dot.p2 { background: var(--accent); }
+    .cal-dot.shared { background: linear-gradient(135deg, var(--primary) 50%, var(--accent) 50%); }
+    .cal-day-badge {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 4px;
+    }
+
+    /* Custody Menu */
+    .custody-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: var(--shadow-hover);
+      padding: 6px;
+      z-index: 10;
+      min-width: 120px;
+      display: none;
+    }
+    .custody-menu.open { display: block; }
+    .custody-menu button {
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 150ms;
+    }
+    .custody-menu button:hover { background: var(--secondary); }
+
+    /* Expenses */
+    .expense-list { margin-top: 16px; }
+    .expense-item {
+      display: flex;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .expense-item:last-child { border-bottom: none; }
+    .expense-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .expense-info { flex: 1; min-width: 0; }
+    .expense-info h4 { font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    .expense-info p { font-size: 13px; color: var(--text-secondary); }
+    .expense-amount { font-weight: 700; font-size: 16px; text-align: right; }
+    .expense-amount .split { font-size: 12px; color: var(--text-secondary); font-weight: 400; }
+    .expense-balance {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .balance-owed { background: #fdf3e8; color: var(--warning); }
+    .balance-paid { background: #e8f5e9; color: var(--success); }
+    .balance-even { background: var(--secondary); color: var(--text-secondary); }
+
+    /* Messages */
+    .message-log {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+    .message-item {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      position: relative;
+    }
+    .message-item.p1 {
+      background: var(--secondary);
+      border-bottom-left-radius: 4px;
+    }
+    .message-item.p2 {
+      background: #eef5f5;
+      border-bottom-right-radius: 4px;
+      margin-left: 24px;
+    }
+    .message-sender {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .p1 .message-sender { color: var(--primary); }
+    .p2 .message-sender { color: var(--primary-light); }
+    .message-text { font-size: 14px; line-height: 1.5; }
+    .message-time {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-family: 'DM Sans', monospace;
+    }
+    .message-input-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      align-items: flex-end;
+    }
+    .message-input-row .form-group { flex: 1; margin-bottom: 0; }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+    .empty-state p { margin-top: 8px; font-size: 14px; }
+
+    /* Children */
+    .child-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--secondary);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .child-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .child-info h3 { font-size: 17px; }
+    .child-info p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .child-actions { margin-left: auto; display: flex; gap: 8px; }
+
+    /* Settings */
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .setting-item:last-child { border-bottom: none; }
+    .setting-info h4 { font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+    .setting-info p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .tabs { gap: 2px; padding: 4px; }
+      .tab { min-width: 60px; padding: 8px 6px; font-size: 12px; }
+      .cal-day { min-height: 36px; font-size: 13px; }
+      .child-actions { flex-direction: column; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Utility */
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .text-right { text-align: right; }
+    .flex-between { display: flex; align-items: center; justify-content: space-between; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>🤝 Co-Parenting Hub</h1>
+    <p>Your shared coordination center</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="calendar">📅 Calendar</button>
+    <button class="tab" data-tab="expenses">💰 Expenses</button>
+    <button class="tab" data-tab="messages">💬 Messages</button>
+    <button class="tab" data-tab="children">👧 Children</button>
+    <button class="tab" data-tab="settings">⚙️ Settings</button>
+  </nav>
+
+  <!-- CALENDAR PANEL -->
+  <div class="panel active" id="panel-calendar">
+    <div class="card">
+      <div class="calendar-nav">
+        <button class="cal-nav-btn" id="cal-prev">‹</button>
+        <h2 id="cal-month-label">April 2026</h2>
+        <button class="cal-nav-btn" id="cal-next">›</button>
+      </div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><div class="cal-dot p1"></div> <span id="label-p1">Parent 1</span></div>
+        <div class="cal-legend-item"><div class="cal-dot p2"></div> <span id="label-p2">Parent 2</span></div>
+        <div class="cal-legend-item"><div class="cal-dot shared"></div> Shared custody</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPENSES PANEL -->
+  <div class="panel" id="panel-expenses">
+    <div class="flex-between mb-16" style="margin-bottom:16px">
+      <h2>Expense Tracker</h2>
+      <button class="btn btn-primary" onclick="openModal('expense-modal')">+ Add Expense</button>
+    </div>
+    <div class="card">
+      <div class="expense-list" id="expense-list"></div>
+      <div class="expense-balance" id="expense-balance"></div>
+    </div>
+  </div>
+
+  <!-- MESSAGES PANEL -->
+  <div class="panel" id="panel-messages">
+    <div class="flex-between mb-16" style="margin-bottom:16px">
+      <h2>Message Log</h2>
+      <button class="btn btn-accent" onclick="exportMessages()">📥 Export for Court</button>
+    </div>
+    <div class="card">
+      <div class="message-log" id="message-log"></div>
+      <div class="message-input-row">
+        <div class="form-group">
+          <select id="msg-sender">
+            <option value="p1">Parent 1</option>
+            <option value="p2">Parent 2</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:2">
+          <input type="text" id="msg-text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()">
+        </div>
+        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHILDREN PANEL -->
+  <div class="panel" id="panel-children">
+    <div class="flex-between mb-16" style="margin-bottom:16px">
+      <h2>Children</h2>
+      <button class="btn btn-primary" onclick="openModal('child-modal')">+ Add Child</button>
+    </div>
+    <div id="children-list"></div>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div class="panel" id="panel-settings">
+    <div class="card">
+      <h2 style="margin-bottom:16px">Settings</h2>
+      <div class="setting-item">
+        <div class="setting-info">
+          <h4>Parent Names</h4>
+          <p>Customize how each parent is labeled</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Parent 1 Name</label>
+        <input type="text" id="setting-p1" placeholder="Parent 1" onchange="saveSettings()">
+      </div>
+      <div class="form-group">
+        <label>Parent 2 Name</label>
+        <input type="text" id="setting-p2" placeholder="Parent 2" onchange="saveSettings()">
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+      <div class="setting-item">
+        <div class="setting-info">
+          <h4>Export Data</h4>
+          <p>Download all your data as a JSON file</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="exportAllData()">Export</button>
+      </div>
+      <div class="setting-item">
+        <div class="setting-info">
+          <h4>Import Data</h4>
+          <p>Restore from a previous export</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">Import</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+      <div class="setting-item">
+        <div class="setting-info">
+          <h4>Clear All Data</h4>
+          <p>Permanently delete all stored data</p>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="clearAllData()">Clear Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="expense-modal">
+  <div class="modal">
+    <h2>Add Expense</h2>
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" id="exp-desc" placeholder="e.g. School supplies">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Amount ($)</label>
+        <input type="number" id="exp-amount" placeholder="0.00" min="0.01" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="exp-category">
+          <option value="Medical">🏥 Medical</option>
+          <option value="Education">📚 Education</option>
+          <option value="Extracurricular">⚽ Extracurricular</option>
+          <option value="Clothing">👕 Clothing</option>
+          <option value="Food">🍽️ Food</option>
+          <option value="Other">📦 Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="exp-date">
+      </div>
+      <div class="form-group">
+        <label>Paid By</label>
+        <select id="exp-paidby">
+          <option value="p1">Parent 1</option>
+          <option value="p2">Parent 2</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('expense-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addExpense()">Add Expense</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="child-modal">
+  <div class="modal">
+    <h2 id="child-modal-title">Add Child</h2>
+    <input type="hidden" id="child-edit-id">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="child-name" placeholder="Child's name">
+    </div>
+    <div class="form-group">
+      <label>Date of Birth</label>
+      <input type="date" id="child-dob">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('child-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveChild()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA LAYER =====
+const LS = {
+  calendar: 'cophub_calendar',
+  expenses: 'cophub_expenses',
+  messages: 'cophub_messages',
+  children: 'cophub_children',
+  settings: 'cophub_settings'
+};
+
+function load(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || {}; }
+  catch { return {}; }
+}
+function save(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { alert('LocalStorage error: ' + e.message); }
+}
+
+// ===== SETTINGS =====
+let settings = JSON.parse(localStorage.getItem(LS.settings)) || { p1: 'Parent 1', p2: 'Parent 2' };
+
+function saveSettings() {
+  settings.p1 = document.getElementById('setting-p1').value || 'Parent 1';
+  settings.p2 = document.getElementById('setting-p2').value || 'Parent 2';
+  localStorage.setItem(LS.settings, JSON.stringify(settings));
+  document.getElementById('label-p1').textContent = settings.p1;
+  document.getElementById('label-p2').textContent = settings.p2;
+  document.getElementById('setting-p1').placeholder = settings.p1;
+  document.getElementById('setting-p2').placeholder = settings.p2;
+  renderAll();
+}
+
+// ===== TABS =====
+document.getElementById('tabs').addEventListener('click', e => {
+  if (e.target.classList.contains('tab')) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('panel-' + e.target.dataset.tab).classList.add('active');
+    if (e.target.dataset.tab === 'calendar') renderCalendar();
+    if (e.target.dataset.tab === 'expenses') renderExpenses();
+    if (e.target.dataset.tab === 'messages') renderMessages();
+    if (e.target.dataset.tab === 'children') renderChildren();
+  }
+});
+
+// ===== CALENDAR =====
+let calYear, calMonth;
+let calData = load(LS.calendar);
+
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendar-grid');
+  grid.innerHTML = '';
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + calYear;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+
+  const dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  dow.forEach(d => { const h = document.createElement('div'); h.className = 'cal-dow'; h.textContent = d; grid.appendChild(h); });
+
+  const today = new Date();
+
+  // Prev month days
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other-month';
+    d.textContent = daysInPrev - i;
+    grid.appendChild(d);
+  }
+
+  // Current month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day';
+    const isToday = calYear === today.getFullYear() && calMonth === today.getMonth() && day === today.getDate();
+    if (isToday) d.classList.add('today');
+    d.innerHTML = `<span>${day}</span>`;
+
+    const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const custody = calData[key];
+
+    if (custody) {
+      const badge = document.createElement('div');
+      badge.className = 'cal-day-badge';
+      badge.style.background = custody === 'p1' ? 'var(--primary)' : custody === 'p2' ? 'var(--accent)' : 'linear-gradient(135deg, var(--primary) 50%, var(--accent) 50%)';
+      d.appendChild(badge);
+    }
+
+    d.addEventListener('click', e => {
+      e.stopPropagation();
+      showCustodyMenu(d, key);
+    });
+    grid.appendChild(d);
+  }
+
+  // Next month
+  const totalCells = firstDay + daysInMonth;
+  const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+  for (let i = 1; i <= remaining; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day other-month';
+    d.textContent = i;
+    grid.appendChild(d);
+  }
+}
+
+function showCustodyMenu(el, key) {
+  document.querySelectorAll('.custody-menu').forEach(m => m.remove());
+  const menu = document.createElement('div');
+  menu.className = 'custody-menu open';
+  const labels = { p1: settings.p1, p2: settings.p2, shared: 'Shared', clear: 'Clear' };
+  ['p1', 'p2', 'shared', 'clear'].forEach(type => {
+    const btn = document.createElement('button');
+    btn.textContent = labels[type];
+    btn.addEventListener('click', () => {
+      if (type === 'clear') {
+        delete calData[key];
+      } else {
+        calData[key] = type;
+      }
+      save(LS.calendar, calData);
+      renderCalendar();
+    });
+    menu.appendChild(btn);
+  });
+  el.style.position = 'relative';
+  el.appendChild(menu);
+  setTimeout(() => {
+    document.addEventListener('click', function handler() {
+      menu.remove();
+      document.removeEventListener('click', handler);
+    });
+  }, 10);
+}
+
+document.getElementById('cal-prev').addEventListener('click', () => {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+});
+document.getElementById('cal-next').addEventListener('click', () => {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+});
+
+// ===== EXPENSES =====
+const catIcons = { Medical:'🏥', Education:'📚', Extracurricular:'⚽', Clothing:'👕', Food:'🍽️', Other:'📦' };
+const catColors = { Medical:'#e8f5e9', Education:'#e3f2fd', Extracurricular:'#fff8e1', Clothing:'#fce4ec', Food:'#f3e5f5', Other:'#f5f5f5' };
+
+function addExpense() {
+  const desc = document.getElementById('exp-desc').value.trim();
+  const amount = parseFloat(document.getElementById('exp-amount').value);
+  const category = document.getElementById('exp-category').value;
+  const date = document.getElementById('exp-date').value;
+  const paidby = document.getElementById('exp-paidby').value;
+
+  if (!desc || !amount || amount <= 0 || !date) {
+    alert('Please fill in all fields with valid values.'); return;
+  }
+
+  let expenses = JSON.parse(localStorage.getItem(LS.expenses)) || [];
+  expenses.unshift({ id: Date.now(), desc, amount, category, date, paidby });
+  save(LS.expenses, expenses);
+  closeModal('expense-modal');
+  document.getElementById('exp-desc').value = '';
+  document.getElementById('exp-amount').value = '';
+  document.getElementById('exp-date').value = '';
+  renderExpenses();
+}
+
+function renderExpenses() {
+  const list = document.getElementById('expense-list');
+  const expenses = JSON.parse(localStorage.getItem(LS.expenses)) || [];
+
+  if (expenses.length === 0) {
+    list.innerHTML = '<div class="empty-state"><p>No expenses recorded yet.<br>Add your first expense to start tracking.</p></div>';
+    document.getElementById('expense-balance').innerHTML = '';
+    return;
+  }
+
+  let p1Total = 0, p2Total = 0;
+  list.innerHTML = expenses.map(e => {
+    const split = e.amount / 2;
+    if (e.paidby === 'p1') p1Total += e.amount;
+    else p2Total += e.amount;
+    const paidLabel = e.paidby === 'p1' ? settings.p1 : settings.p2;
+    const color = catColors[e.category] || '#f5f5f5';
+    return `
+      <div class="expense-item">
+        <div class="expense-icon" style="background:${color}">${catIcons[e.category] || '📦'}</div>
+        <div class="expense-info">
+          <h4>${e.desc}</h4>
+          <p>${e.category} · ${e.date} · Paid by ${paidLabel}</p>
+        </div>
+        <div class="expense-amount">
+          $${e.amount.toFixed(2)}
+          <div class="split">$${split.toFixed(2)} each</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const diff = p1Total - p2Total;
+  const balance = document.getElementById('expense-balance');
+  if (Math.abs(diff) < 0.01) {
+    balance.className = 'expense-balance balance-even';
+    balance.textContent = '✅ All settled — expenses are split evenly!';
+  } else if (diff > 0) {
+    balance.className = 'expense-balance balance-owed';
+    balance.textContent = `💸 ${settings.p2} owes ${settings.p1}: $${(diff/2).toFixed(2)}`;
+  } else {
+    balance.className = 'expense-balance balance-paid';
+    balance.textContent = `💸 ${settings.p1} owes ${settings.p2}: $${(Math.abs(diff)/2).toFixed(2)}`;
+  }
+}
+
+// ===== MESSAGES =====
+function sendMessage() {
+  const text = document.getElementById('msg-text').value.trim();
+  const sender = document.getElementById('msg-sender').value;
+  if (!text) return;
+
+  let messages = JSON.parse(localStorage.getItem(LS.messages)) || [];
+  const now = new Date();
+  const timestamp = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+  messages.push({ id: Date.now(), sender, text, timestamp });
+  save(LS.messages, messages);
+  document.getElementById('msg-text').value = '';
+  renderMessages();
+}
+
+function renderMessages() {
+  const log = document.getElementById('message-log');
+  const messages = JSON.parse(localStorage.getItem(LS.messages)) || [];
+
+  if (messages.length === 0) {
+    log.innerHTML = '<div class="empty-state"><p>No messages yet.<br>All messages are timestamped for court admissibility.</p></div>';
+    return;
+  }
+
+  log.innerHTML = messages.map(m => {
+    const senderName = m.sender === 'p1' ? settings.p1 : settings.p2;
+    return `<div class="message-item ${m.sender}">
+      <div class="message-sender">${senderName}</div>
+      <div class="message-text">${m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      <div class="message-time">${m.timestamp}</div>
+    </div>`;
+  }).join('');
+  log.scrollTop = log.scrollHeight;
+}
+
+function exportMessages() {
+  const messages = JSON.parse(localStorage.getItem(LS.messages)) || [];
+  if (messages.length === 0) { alert('No messages to export.'); return; }
+  const exportData = {
+    exportedAt: new Date().toISOString(),
+    parent1: settings.p1,
+    parent2: settings.p2,
+    totalMessages: messages.length,
+    messages: messages.map(m => ({
+      ...m,
+      senderName: m.sender === 'p1' ? settings.p1 : settings.p2
+    }))
+  };
+  downloadJSON(exportData, 'cophub-messages-' + new Date().toISOString().split('T')[0] + '.json');
+}
+
+// ===== CHILDREN =====
+function saveChild() {
+  const name = document.getElementById('child-name').value.trim();
+  const dob = document.getElementById('child-dob').value;
+  const editId = document.getElementById('child-edit-id').value;
+
+  if (!name || !dob) { alert('Please fill in all fields.'); return; }
+  if (new Date(dob) > new Date()) { alert('Date of birth cannot be in the future.'); return; }
+
+  let children = JSON.parse(localStorage.getItem(LS.children)) || [];
+
+  if (editId) {
+    children = children.map(c => c.id == editId ? { ...c, name, dob } : c);
+  } else {
+    children.push({ id: Date.now(), name, dob });
+  }
+
+  save(LS.children, children);
+  closeModal('child-modal');
+  document.getElementById('child-name').value = '';
+  document.getElementById('child-dob').value = '';
+  document.getElementById('child-edit-id').value = '';
+  document.getElementById('child-modal-title').textContent = 'Add Child';
+  renderChildren();
+}
+
+function renderChildren() {
+  const list = document.getElementById('children-list');
+  const children = JSON.parse(localStorage.getItem(LS.children)) || [];
+
+  if (children.length === 0) {
+    list.innerHTML = '<div class="card"><div class="empty-state"><p>No children added yet.<br>Add your first child profile to get started.</p></div></div>';
+    return;
+  }
+
+  list.innerHTML = children.map(c => {
+    const age = calcAge(c.dob);
+    const initial = c.name.charAt(0).toUpperCase();
+    return `<div class="child-card">
+      <div class="child-avatar">${initial}</div>
+      <div class="child-info">
+        <h3>${c.name}</h3>
+        <p>DOB: ${c.dob} · ${age}</p>
+      </div>
+      <div class="child-actions">
+        <button class="btn btn-outline btn-sm" onclick="editChild('${c.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteChild('${c.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function calcAge(dob) {
+  const birth = new Date(dob);
+  const now = new Date();
+  let years = now.getFullYear() - birth.getFullYear();
+  const m = now.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) years--;
+  if (years < 1) {
+    const months = (now.getFullYear() - birth.getFullYear()) * 12 + now.getMonth() - birth.getMonth();
+    return months + ' month' + (months !== 1 ? 's' : '') + ' old';
+  }
+  return years + ' year' + (years !== 1 ? 's' : '') + ' old';
+}
+
+function editChild(id) {
+  const children = JSON.parse(localStorage.getItem(LS.children)) || [];
+  const child = children.find(c => c.id == id);
+  if (!child) return;
+  document.getElementById('child-name').value = child.name;
+  document.getElementById('child-dob').value = child.dob;
+  document.getElementById('child-edit-id').value = child.id;
+  document.getElementById('child-modal-title').textContent = 'Edit Child';
+  openModal('child-modal');
+}
+
+function deleteChild(id) {
+  if (!confirm('Delete this child profile?')) return;
+  let children = JSON.parse(localStorage.getItem(LS.children)) || [];
+  children = children.filter(c => c.id != id);
+  save(LS.children, children);
+  renderChildren();
+}
+
+// ===== MODAL =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ===== DATA EXPORT/IMPORT =====
+function exportAllData() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    settings,
+    calendar: calData,
+    expenses: JSON.parse(localStorage.getItem(LS.expenses)) || [],
+    messages: JSON.parse(localStorage.getItem(LS.messages)) || [],
+    children: JSON.parse(localStorage.getItem(LS.children)) || []
+  };
+  downloadJSON(data, 'cophub-backup-' + new Date().toISOString().split('T')[0] + '.json');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (data.settings) { settings = data.settings; localStorage.setItem(LS.settings, JSON.stringify(settings)); }
+      if (data.calendar) { calData = data.calendar; save(LS.calendar, calData); }
+      if (data.expenses) save(LS.expenses, data.expenses);
+      if (data.messages) save(LS.messages, data.messages);
+      if (data.children) save(LS.children, data.children);
+      applySettings();
+      renderAll();
+      alert('Data imported successfully!');
+    } catch(err) { alert('Invalid file: ' + err.message); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function clearAllData() {
+  if (!confirm('Delete ALL data? This cannot be undone.')) return;
+  if (!confirm('Are you absolutely sure? All calendar, expense, message, and child data will be permanently deleted.')) return;
+  Object.values(LS).forEach(k => localStorage.removeItem(k));
+  calData = {};
+  settings = { p1: 'Parent 1', p2: 'Parent 2' };
+  applySettings();
+  renderAll();
+  alert('All data cleared.');
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ===== UTILS =====
+function applySettings() {
+  document.getElementById('setting-p1').value = settings.p1;
+  document.getElementById('setting-p2').value = settings.p2;
+  document.getElementById('label-p1').textContent = settings.p1;
+  document.getElementById('label-p2').textContent = settings.p2;
+}
+
+function renderAll() {
+  renderCalendar();
+  renderExpenses();
+  renderMessages();
+  renderChildren();
+}
+
+// ===== INIT =====
+(function init() {
+  applySettings();
+  initCalendar();
+  // Default date for expense form
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('exp-date').value = today;
+  renderAll();
+})();
+</script>
+</body>
+</html>
